@@ -14,18 +14,20 @@ window.addEventListener("mousedown", async event => {
         board.makeMove({ startX: moveStart.x, startY: moveStart.y, endY: y, endX: x });
         
 	    render();
+        await new Promise(resolve => setTimeout(resolve, 100));
         while(board.player != HUMAN){
             moveStart = null;
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            var p = new Promise(resolve => setTimeout(resolve, 1000));
             board.makeMove(GetMove(board));
-            
+            await p;
 	        render();
         }
     }
 });
 
 var scale = Math.min(window.innerHeight, window.innerWidth) / 8;
-var board = new CheckerBoard("2 0-0-0-0- 0-0-0-0- 0-0-0-0- 1-1-1-1- 1-1-1-1- 2-2-2-2- 2-2-2-2- 2-2-2-2-");
+//var board = new CheckerBoard("2 1-1-1-1- 1-1-1-1- 1-1-1-1- 1-1-1-1- 1-1-1-1- 1-1-1-1- 1-1-1-0C 1-2C1-0C");
+var board = new CheckerBoard();
 
 render(); 
 
@@ -38,10 +40,24 @@ function render(){
             ctx.fillRect(j * scale, i * scale, scale, scale);
 
             if(board.board[i][j]){
+                if(moveStart && i == moveStart.x && j == moveStart.y){
+                    ctx.fillStyle = "white";
+                    ctx.beginPath()
+                    ctx.arc(j * scale + scale / 2, i * scale + scale / 2, scale / 2 - 5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
                 ctx.fillStyle = board.board[i][j] == -1 ? "red" : "black";
                 ctx.beginPath()
                 ctx.arc(j * scale + scale / 2, i * scale + scale / 2, scale / 2 - 10, 0, Math.PI*2);
                 ctx.fill();
+
+                if(board.crowned[i][j]){
+                    ctx.fillStyle = "#d0d0d0";
+                    ctx.beginPath()
+                    ctx.arc(j * scale + scale / 2, i * scale + scale / 2, 10, 0, Math.PI*2);
+                    ctx.fill();
+                }
             }
         }
     }
