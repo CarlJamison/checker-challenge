@@ -1,9 +1,8 @@
 var NUMBER_OF_ROUNDS = 6;
 
 function getNaiveScore(board, player) {
-  if (board.gameOver) {
-    return board.player === player ? 10 : -10;
-  }
+  if (board.gameOver)
+    return board.player === player ? 20 : -20;
 
   var me = 0;
   var thatGuy = 0;
@@ -13,88 +12,66 @@ function getNaiveScore(board, player) {
       if (board.board[i][j] === player) {
         me += 1;
 
-        if (board.crowned[i][j]) {
+        if (board.crowned[i][j])
           me += 0.5;
-        }
-      } else {
-        if (board.board[i][j] !== 0) {
-          thatGuy += 1;
+      } else if (board.board[i][j] !== 0) {
+        thatGuy += 1;
 
-          if (board.crowned[i][j]) {
-            thatGuy += 0.5;
-          }
-        }
+        if (board.crowned[i][j])
+          thatGuy += 0.5;
       }
     }
   }
 
-  if (board.isJumpPossible()) {
+  if (board.isJumpPossible())
     board.player === player ? me++ : thatGuy++;
-  }
 
   return me / thatGuy;
 }
 
-function getScoreRec(board, player, remainingRounds, ALPHA, BETA) {
-  var clone, localScore, moveList, score;
-
-  if (board.gameOver || remainingRounds === 0) {
+function getScore(board, player, remainingRounds, ALPHA, BETA) {
+  if (board.gameOver || remainingRounds === 0)
     return getNaiveScore(board, player);
-  }
 
-  moveList = board.getMoveList();
+  var score = board.player === player ? -Infinity : Infinity;
+  board.getMoveList().forEach(move => {
+    var clone = new CheckerBoard(board);
+    clone.makeMove(move);
 
-  if (board.player === player) {
-    score = -Infinity;
-    moveList.forEach(move => {
-      clone = new CheckerBoard(board);
-      clone.makeMove(move);
-      score = Math.max(getScoreRec(clone, player, remainingRounds - 1, ALPHA, BETA), score);
+    if (board.player === player) {
+      score = Math.max(getScore(clone, player, remainingRounds - 1, ALPHA, BETA), score);
 
       if(score >= BETA) return score;
-      ALPHA = Math.max(ALPHA, score)
-      if(score == 10) return score
-    });
+      ALPHA = Math.max(ALPHA, score);
+      if(score == 20) return score;
+    }else{
+      score = Math.min(getScore(clone, player, remainingRounds - 1, ALPHA, BETA), score);
 
-    return score;
-  } else {
-    score = Infinity;
-    moveList.forEach(move => {
-      clone = new CheckerBoard(board);
-      clone.makeMove(move);
-      score = Math.min(getScoreRec(clone, player, remainingRounds - 1, ALPHA, BETA), score);
+      if(score <= ALPHA) return score;
+      BETA = Math.min(BETA, score);
+      if(score == -20) return score;
+    }
+  });
 
-      if(score <= ALPHA) return score
-      BETA = Math.min(BETA, score)
-      if(score == -1000) return score
-    });
-
-    return score;
-  }
-}
-
-function getScore(board, player, ALPHA, BETA) {
-  return getScoreRec(board, player, NUMBER_OF_ROUNDS, ALPHA, BETA);
+  return score;
 }
 
 function GetMove(board) {
   ALPHA = -Infinity
   BETA = Infinity
   var start = Date.now();
-  var clone, highMove, highScore, moveList, score;
-  moveList = board.getMoveList();
+  var moveList = board.getMoveList();
 
-  if (moveList.length === 1) {
+  if (moveList.length === 1)
     return moveList[0];
-  }
 
-  highScore = -Infinity;
-  highMove = 0;
+  var highScore = -Infinity;
+  var highMove = 0;
 
   moveList.forEach(move => {
-    clone = new CheckerBoard(board);
+    var clone = new CheckerBoard(board);
     clone.makeMove(move);
-    score = getScore(clone, board.player, ALPHA, BETA);
+    var score = getScore(clone, board.player, NUMBER_OF_ROUNDS, ALPHA, BETA);
     ALPHA = Math.max(ALPHA, score)
     console.log(move.startX.toString() + ":" + move.startY.toString() + " -> " + move.endX.toString() + ":" + move.endY.toString() + " Score: " + score.toString());
 

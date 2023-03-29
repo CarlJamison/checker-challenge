@@ -22,9 +22,14 @@ class CheckerBoard {
             this.jumped = board.jumped;
             this.iJump = board.iJump;
             this.jJump = board.jJump;
-    
-            this.board = JSON.parse(JSON.stringify(board.board));
-            this.crowned = JSON.parse(JSON.stringify(board.crowned));
+            
+            this.board = [];
+            this.crowned = [];
+
+            for (var i = 0; i < 8; i++){
+                this.board[i] = board.board[i].slice();
+                this.crowned[i] = board.crowned[i].slice();
+            }
     
             this.player = board.player;
             this.gameOver = board.gameOver;
@@ -96,9 +101,8 @@ class CheckerBoard {
     }
 
     getMoveList() {
-        var jump, list;
-        list = [];
-        jump = this.isJumpPossible();
+        var list = [];
+        var jump = this.isJumpPossible();
 
         for (var i = 0; i < 8; i += 1) {
             for (var j = 0; j < 8; j += 1) {
@@ -120,18 +124,15 @@ class CheckerBoard {
     }
 
     checkWin() {
-        var player1, player2;
-        player1 = false;
-        player2 = false;
+        var player1 = false;
+        var player2 = false;
 
         for (var i = 0; i < 8; i += 1) {
             for (var j = 0; j < 8; j += 1) {
                 if (this.board[i][j] === -1) {
                     player1 = true;
-                } else {
-                    if (this.board[i][j] === 1) {
-                        player2 = true;
-                    }
+                } else if (this.board[i][j] === 1) {
+                    player2 = true;
                 }
             }
         }
@@ -141,11 +142,8 @@ class CheckerBoard {
     }
 
     isJumpPossible() {
-        var retVal;
-
         if (this.jumped) {
-            retVal = this.checkDirection(1, 1, this.iJump, this.jJump) || this.checkDirection(1, -1, this.iJump, this.jJump) || this.checkDirection(-1, 1, this.iJump, this.jJump) || this.checkDirection(-1, -1, this.iJump, this.jJump);
-            return retVal;
+            return this.checkDirection(1, 1, this.iJump, this.jJump) || this.checkDirection(1, -1, this.iJump, this.jJump) || this.checkDirection(-1, 1, this.iJump, this.jJump) || this.checkDirection(-1, -1, this.iJump, this.jJump);
         }
 
         for (var i = 0; i < 8; i += 1) {
@@ -179,14 +177,13 @@ class CheckerBoard {
     }
 
     makeMove(move) {
-        var endX, endY, startX, startY, valid;
-        startX = move.startX;
-        startY = move.startY;
-        endX = move.endX;
-        endY = move.endY;
+        var startX = move.startX;
+        var startY = move.startY;
+        var endX = move.endX;
+        var endY = move.endY;
 
         if (this.board[startX][startY] === this.player && this.board[endX][endY] === 0) {
-            valid = false;
+            var valid = false;
 
             if (Math.abs(startX - endX) === 2 && Math.abs(startY - endY) === 2) {
                 if (this.board[Number.parseInt((startX + endX) / 2)][Number.parseInt((startY + endY) / 2)] === -this.player) {
@@ -203,7 +200,7 @@ class CheckerBoard {
                 if (Math.abs(startX - endX) === 1 && Math.abs(startY - endY) === 1) {
                     if (this.crowned[startX][startY] || startX - endX === this.player) {
                         if (!this.isJumpPossible()) {
-                        valid = true;
+                            valid = true;
                         }
                     }
                 }
@@ -228,7 +225,7 @@ class CheckerBoard {
                         this.player = -this.player;
 
                         if (!this.isMovePossible()) {
-                        this.gameOver = true;
+                            this.gameOver = true;
                         }
                     }
                 }
@@ -239,21 +236,15 @@ class CheckerBoard {
     }
 
     toString() {
-        var returnString, val;
-        returnString = (this.player + 1).toString();
+        var returnString = (this.player + 1).toString();
 
         for (var i = 0; i < 8; i += 1) {
             returnString += "\n";
 
             for (var j = 0; j < 8; j += 1) {
-                val = this.board[i][j];
+                var val = this.board[i][j];
                 returnString += val === -1 ? "O" : val === 0 ? " " : "X";
-
-                if (this.crowned[i][j]) {
-                    returnString += "C";
-                } else {
-                    returnString += "-";
-                }
+                returnString += this.crowned[i][j] ? "C" : "-";
             }
         }
 
