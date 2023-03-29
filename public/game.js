@@ -62,3 +62,12 @@ function render(){
         }
     }
 }
+
+async function arena(){
+    while(!board.gameOver){
+        board.makeMove(GetMove(board));
+        
+        render();
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+}

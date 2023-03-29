@@ -40,17 +40,13 @@ function getScore(board, player, remainingRounds, ALPHA, BETA) {
 
     if (board.player === player) {
       score = Math.max(getScore(clone, player, remainingRounds - 1, ALPHA, BETA), score);
-
-      if(score >= BETA) return score;
       ALPHA = Math.max(ALPHA, score);
-      if(score == 20) return score;
     }else{
       score = Math.min(getScore(clone, player, remainingRounds - 1, ALPHA, BETA), score);
-
-      if(score <= ALPHA) return score;
       BETA = Math.min(BETA, score);
-      if(score == -20) return score;
     }
+
+    if(ALPHA >= BETA || score * board.player == 20) return score;
   });
 
   return score;

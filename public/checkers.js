@@ -36,7 +36,6 @@ class CheckerBoard {
             return;
         }
 
-        var coord;
         this.move = 0;
         this._isJumpPossible = false;
         this.jpCheck = -1;
@@ -56,19 +55,19 @@ class CheckerBoard {
 
         this.player = Number.parseInt(boardString.slice(0, 1)) - 1;
         this.gameOver = false;
-        coord = 2;
 
+        var coord = 2;
         for (var i = 0; i < 8; i += 1) {
             for (var j = 0; j < 8; j += 1) {
                 if (i % 2 === j % 2) {
                     this.board[i][j] = Number.parseInt(boardString.slice(coord, coord + 1)) - 1;
-                    coord += 1;
+                    coord++;
                     this.crowned[i][j] = boardString.slice(coord, coord + 1) === "C";
-                    coord += 1;
+                    coord++;
                 }
             }
 
-            coord += 1;
+            coord++;
         }
     }
 
@@ -124,8 +123,7 @@ class CheckerBoard {
     }
 
     checkWin() {
-        var player1 = false;
-        var player2 = false;
+        var player1, player2 = false;
 
         for (var i = 0; i < 8; i += 1) {
             for (var j = 0; j < 8; j += 1) {
@@ -209,7 +207,7 @@ class CheckerBoard {
             if (valid) {
                 this.board[startX][startY] = 0;
                 this.board[endX][endY] = this.player;
-                this.move += 1;
+                this.move++;
                 this.crowned[endX][endY] = this.crowned[startX][startY];
                 this.crowned[startX][startY] = false;
 
