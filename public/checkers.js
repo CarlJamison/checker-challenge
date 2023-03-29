@@ -16,7 +16,6 @@ class CheckerBoard {
 
         if(typeof boardString != 'string'){
             var board = boardString;
-            this.move = board.move;
             this._isJumpPossible = board._isJumpPossible;
             this.jpCheck = board.jpCheck;
             this.jumped = board.jumped;
@@ -35,8 +34,7 @@ class CheckerBoard {
             this.gameOver = board.gameOver;
             return;
         }
-
-        this.move = 0;
+        
         this._isJumpPossible = false;
         this.jpCheck = -1;
         this.jumped = false;
@@ -207,7 +205,6 @@ class CheckerBoard {
             if (valid) {
                 this.board[startX][startY] = 0;
                 this.board[endX][endY] = this.player;
-                this.move++;
                 this.crowned[endX][endY] = this.crowned[startX][startY];
                 this.crowned[startX][startY] = false;
 
