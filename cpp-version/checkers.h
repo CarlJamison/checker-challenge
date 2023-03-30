@@ -154,8 +154,9 @@ class CheckerBoard {
         int endX = move.endX;
         int endY = move.endY;
 
-        if (board[startX][startY] == player && board[endX][endY] == 0) {
-            bool valid = false;
+        //Removed validation because we're assumming we're playing nice, and we need all the speed we can get
+        //if (board[startX][startY] == player && board[endX][endY] == 0) {
+            //bool valid = false;
 
             if (abs(startX - endX) == 2 && abs(startY - endY) == 2) {
                 if (board[(startX + endX) / 2][(startY + endY) / 2] == -player) {
@@ -165,10 +166,10 @@ class CheckerBoard {
                         jumped = true;
                         iJump = endX;
                         jJump = endY;
-                        valid = true;
+                        //valid = true;
                     }
                 }
-            } else {
+            }/* else {
                 if (abs(startX - endX) == 1 && abs(startY - endY) == 1) {
                     if (crowned[startX][startY] || startX - endX == player) {
                         if (!isJumpPossible()) {
@@ -176,9 +177,9 @@ class CheckerBoard {
                         }
                     }
                 }
-            }
+            }*/
 
-            if (valid) {
+            //if (valid) {
                 board[startX][startY] = 0;
                 board[endX][endY] = player;
                 crowned[endX][endY] = crowned[startX][startY];
@@ -200,10 +201,10 @@ class CheckerBoard {
                         }
                     }
                 }
-            } else {
+            /*} else {
                 //BAD
-            }
-        }
+            }*/
+        //}
     }
 
     void checkDirectionList(int iO, int jO, int i, int j) {
@@ -224,16 +225,18 @@ class CheckerBoard {
 
         for (int i = 0; i < 8; i += 1) {
             for (int j = 0; j < 8; j += 1) {
-                checkDirectionList(1, 1, i, j);
-                checkDirectionList(1, -1, i, j);
-                checkDirectionList(-1, 1, i, j);
-                checkDirectionList(-1, -1, i, j);
+                if(board[i][j] == player){
+                    checkDirectionList(1, 1, i, j);
+                    checkDirectionList(1, -1, i, j);
+                    checkDirectionList(-1, 1, i, j);
+                    checkDirectionList(-1, -1, i, j);
 
-                if (!jump) {
-                    checkMoveDirectionList(1, 1, i, j);
-                    checkMoveDirectionList(1, -1, i, j);
-                    checkMoveDirectionList(-1, 1, i, j);
-                    checkMoveDirectionList(-1, -1, i, j);
+                    if (!jump) {
+                        checkMoveDirectionList(1, 1, i, j);
+                        checkMoveDirectionList(1, -1, i, j);
+                        checkMoveDirectionList(-1, 1, i, j);
+                        checkMoveDirectionList(-1, -1, i, j);
+                    }
                 }
             }
         }

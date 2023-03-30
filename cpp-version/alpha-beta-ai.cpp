@@ -3,11 +3,11 @@
 #include <cstdio>
 #include <string> 
 
-int coolCounter = 0;
+int NUMBER_OF_ROUNDS = 14;
 
 double getNaiveScore(CheckerBoard board, int player) {
   if (board.gameOver)
-    return board.player == player ? 20.0 : -20.0;
+    return board.player == player ? 20.0 + NUMBER_OF_ROUNDS : -20.0;
 
   double me = 0;
   double thatGuy = 0;
@@ -53,13 +53,15 @@ double getScore(CheckerBoard board, int player, int remainingRounds, double ALPH
     }
 
     //Either this move is extremely unlikely, or it's a guaranteed win/loss
-    if(ALPHA >= BETA || score * board.player == 20) return score;
+    if(ALPHA >= BETA) return score;
+    if(board.player == player && score >= 20) return score - 1;
+    if(board.player != player && score == -20) return score;
   }
 
   return score;
 }
 
-Move GetMove(CheckerBoard board, int NUMBER_OF_ROUNDS) {
+Move GetMove(CheckerBoard board) {
   double ALPHA = -100;
   double BETA = 100;
   board.getMoveList();
@@ -95,7 +97,7 @@ int main(int argc, char* argv[])
     }
 
     CheckerBoard coolBoard = CheckerBoard(boardArray);
-    Move move = GetMove(coolBoard, 15);
+    Move move = GetMove(coolBoard);
     printf("{ \"startX\": \"%d\", \"startY\": \"%d\", \"endX\": \"%d\", \"endY\": \"%d\" }", move.startX, move.startY, move.endX, move.endY);
     return 0;
 }
