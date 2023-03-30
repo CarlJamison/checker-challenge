@@ -46,6 +46,7 @@ function getScore(board, player, remainingRounds, ALPHA, BETA) {
       BETA = Math.min(BETA, score);
     }
 
+    //Either this move is extremely unlikely, or it's a guaranteed win/loss
     if(ALPHA >= BETA || score * board.player == 20) return score;
   });
 
@@ -81,12 +82,12 @@ function GetMove(board) {
 
   var time = Date.now() - start;
 
-  if(time < 1000){
+  /*if(time < 1000){
     NUMBER_OF_ROUNDS++;
     console.log("NUMBER_OF_ROUNDS dynamically raised to " + NUMBER_OF_ROUNDS);
   }else if(time > 3000){
     NUMBER_OF_ROUNDS--;
     console.log("NUMBER_OF_ROUNDS dynamically lowered to " + NUMBER_OF_ROUNDS);
-  }
+  }*/
   return highMove;
 }

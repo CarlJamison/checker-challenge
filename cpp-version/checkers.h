@@ -42,7 +42,7 @@ class CheckerBoard {
         iJump = 0;
         jJump = 0;
 
-        player = input[0];
+        player = input[0] - 1;
         gameOver = false;
         int coord = 1;
 
@@ -96,10 +96,15 @@ class CheckerBoard {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (board[i][j] == -1) {
+                if (board[j][i] == -1) {
                     player1 = true;
-                } else if (board[i][j] == 1) {
+                } else if (board[j][i] == 1) {
                     player2 = true;
+                }
+
+                if(player1 && player2){
+                    gameOver = false;
+                    return gameOver;
                 }
             }
         }

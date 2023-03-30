@@ -65,7 +65,20 @@ function render(){
 
 async function arena(){
     while(!board.gameOver){
-        board.makeMove(GetMove(board));
+        if(board.player == -1){
+            board.makeMove(GetMove(board));
+        }else{
+            var json = await fetch("move/" + board.toState())
+                .then((response) => response.json())
+            var move = {
+                startX: +json.startX,
+                startY: +json.startY,
+                endX: +json.endX,
+                endY: +json.endY
+            }
+
+            board.makeMove(move);
+        }
         
         render();
         await new Promise(resolve => setTimeout(resolve, 100));

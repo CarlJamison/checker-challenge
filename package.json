@@ -4,7 +4,7 @@
   "description": "cool checker challenge thing",
   "scripts": {
     "start": "node app.js",
-    "build": "g++ cpp-version/alpha-beta-ai.cpp -o alpha-beta-ai"
+    "build": "g++ cpp-version/alpha-beta-ai.cpp -o alpha-beta-ai -O3"
   },
   "dependencies": {
     "express": "^4.18.2"

@@ -246,5 +246,22 @@ class CheckerBoard {
         return returnString;
     }
 
+    toState() {
+        var returnString = (this.player + 1).toString();
+
+        for (var i = 0; i < 8; i += 1) {
+            returnString += " ";
+
+            for (var j = 0; j < 8; j += 1) {
+                if (i % 2 === j % 2) {
+                    returnString += this.board[i][j] + 1
+                    returnString += this.crowned[i][j] ? "C" : "-";
+                }
+            }
+        }
+
+        return returnString;
+    }
+
 }
   

@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <string> 
 
+int coolCounter = 0;
+
 double getNaiveScore(CheckerBoard board, int player) {
   if (board.gameOver)
     return board.player == player ? 20.0 : -20.0;
@@ -26,8 +28,8 @@ double getNaiveScore(CheckerBoard board, int player) {
     }
   }
 
-  if (board.isJumpPossible())
-    board.player == player ? me++ : thatGuy++;
+  /*if (board.isJumpPossible())
+    board.player == player ? me++ : thatGuy++;*/
 
   return me / thatGuy;
 }
@@ -80,23 +82,20 @@ Move GetMove(CheckerBoard board, int NUMBER_OF_ROUNDS) {
       highMove = move;
     }
   }
-
+    
   return highMove;
 }
 
 int main(int argc, char* argv[])
 {
-    printf("You have entered %d arguments:\n", argc);
- 
-    for (int i = 0; i < argc; i++) {
-        printf("%s\n", argv[i]);
-    }
 
     int boardArray[65];
     for(int i = 0; i < 65; i++){
         boardArray[i] = int(argv[1][i]) - 48;
     }
 
-    GetMove(boardArray, 5);
+    CheckerBoard coolBoard = CheckerBoard(boardArray);
+    Move move = GetMove(coolBoard, 15);
+    printf("{ \"startX\": \"%d\", \"startY\": \"%d\", \"endX\": \"%d\", \"endY\": \"%d\" }", move.startX, move.startY, move.endX, move.endY);
     return 0;
 }
